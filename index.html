@@ -17,6 +17,8 @@
     body { font-family: 'Inter', sans-serif; }
     .fade-in { animation: fadeIn 0.3s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .disabled-section { opacity: 0.5; filter: grayscale(0.8); }
+    .disabled-section .level-card { pointer-events: none; }
   </style>
 </head>
 <body>
@@ -35,6 +37,12 @@
     const ChevronRightIcon = () => (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="9,18 15,12 9,6"></polyline>
+      </svg>
+    );
+
+    const ChevronDownIcon = () => (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="6,9 12,15 18,9"></polyline>
       </svg>
     );
 
@@ -82,13 +90,38 @@
       </svg>
     );
 
-    // Données des services
+    const XIcon = () => (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    );
+
+    // Données des services avec descriptions détaillées
     const services = [
       {
         id: 'audit',
         title: 'A. Audit & Stratégie SEO',
         description: 'La base de toute stratégie SEO efficace. Nous analysons votre site, votre marché et vos concurrents pour définir un plan d\'action adapté à vos objectifs.',
         icon: '🔍',
+        detailedInfo: {
+          title: 'Audit & Stratégie SEO - En détail',
+          content: `Notre audit SEO comprend une analyse technique complète de votre site, une étude approfondie des mots-clés de votre secteur, et un benchmark de vos concurrents.
+
+**Ce que nous analysons :**
+• Vitesse de chargement (Core Web Vitals)
+• Structure des URLs et architecture du site
+• Métadonnées (titres, descriptions, balises H1-H6)
+• Maillage interne entre les pages
+• Compatibilité mobile et responsive design
+• Erreurs 404, redirections, liens cassés
+• Indexation et fichier sitemap.xml
+
+**Stratégie de Mots-Clés :**
+Nous organisons les mots-clés en clusters thématiques pour éviter la cannibalisation SEO et concentrer les efforts de façon stratégique.
+
+**Livrable :** Roadmap SEO personnalisée avec priorisation des actions et KPIs de suivi.`
+        },
         levels: [
           { name: 'Essentiel', price: 200, features: ['Audit technique basique', '10-15 mots-clés principaux', 'Recommandations générales'], recommended: 'Sites récents ou petits budgets', color: 'blue' },
           { name: 'Avancé', price: 350, features: ['Audit approfondi', 'Clusters thématiques', 'Priorisation des actions', 'Roadmap trimestrielle'], recommended: 'Sites établis cherchant à croître', color: 'indigo', popular: true },
@@ -100,6 +133,24 @@
         title: 'B. Corrections Techniques',
         description: 'Un site techniquement sain est la fondation d\'un bon référencement. Nous identifions et corrigeons les freins techniques.',
         icon: '🔧',
+        detailedInfo: {
+          title: 'Corrections Techniques - En détail',
+          content: `Un site techniquement sain est la fondation d'un bon référencement. Nous utilisons des outils professionnels (Ahrefs, Screaming Frog) pour détecter tous les problèmes.
+
+**Types d'erreurs détectées :**
+• Erreurs 404 et liens cassés
+• Problèmes de redirections (chaînes, boucles)
+• Contenu dupliqué
+• Problèmes de canonicals
+• Erreurs de balisage Schema.org
+• Problèmes d'indexation (noindex accidentels)
+• Vitesse de chargement lente
+
+**Nettoyage des backlinks toxiques :**
+Nous analysons votre profil de liens et désavouons les backlinks spam via Google Search Console pour éviter les pénalités.
+
+**Livrable :** Rapport technique avec priorisation High/Medium/Low et guide d'implémentation.`
+        },
         levels: [
           { name: 'Essentiel', price: 100, features: ['Liste des erreurs détectées', 'Export brut des problèmes'], recommended: 'Webmaster en interne', color: 'blue' },
           { name: 'Avancé', price: 250, features: ['Détection des erreurs', 'Explications détaillées', 'Recommandations actionnables'], recommended: 'Comprendre et prioriser', color: 'indigo', popular: true },
@@ -111,6 +162,24 @@
         title: 'C. Optimisation Pages Centrales',
         description: 'Vos pages clés méritent une attention particulière. Nous optimisons leur structure et leur contenu pour maximiser leur visibilité.',
         icon: '📄',
+        detailedInfo: {
+          title: 'Optimisation Pages Centrales - En détail',
+          content: `Vos pages clés (accueil, services, produits phares) sont les piliers de votre visibilité. Chaque page doit cibler un mot-clé principal et son champ sémantique.
+
+**Ce que nous optimisons :**
+• Balise Title (< 60 caractères, mot-clé au début)
+• Meta Description (< 160 caractères, incitation au clic)
+• Structure H1 / H2 / H3 hiérarchique
+• Densité et placement des mots-clés
+• Contenu enrichi (listes, tableaux, FAQ)
+• Images (alt text, compression, format WebP)
+• Liens internes contextuels
+
+**Maillage interne :**
+Nous créons une architecture de liens internes cohérente pour distribuer le "jus SEO" vers vos pages prioritaires.
+
+**Livrable :** Pages optimisées prêtes à publier ou guidelines détaillées pour votre équipe.`
+        },
         levels: [
           { name: 'Essentiel', price: 200, features: ['Guidelines d\'optimisation', 'Titres & métas', 'Structure H1/H2'], recommended: 'Rédaction en interne', color: 'blue' },
           { name: 'Avancé', price: 400, features: ['Guidelines complètes', 'Réécriture des éléments clés', 'Optimisation des balises'], recommended: 'Clé en main partiel', color: 'indigo', popular: true },
@@ -122,6 +191,31 @@
         title: 'D. Contenu IA Optimisé',
         description: 'Le contenu régulier et de qualité est le carburant du SEO. Notre système IA vous permet de publier des articles optimisés.',
         icon: '✍️',
+        detailedInfo: {
+          title: 'Contenu IA Optimisé - En détail',
+          content: `La régularité est cruciale : 2 articles/semaine = +68% de trafic organique après 6 mois (source: HubSpot 2024). Google favorise les sites actifs avec du contenu frais.
+
+**Notre Process de Création :**
+1. Identification des thématiques via analyse Ahrefs
+2. Analyse des volumes de recherche et difficulté
+3. Structuration optimale (H1, H2, FAQ, tableaux)
+4. Rédaction IA personnalisée à votre ton
+5. Publication (draft ou directe selon formule)
+
+**Ce qui nous différencie :**
+• Prompts personnalisés + relecture humaine
+• Densité naturelle de mots-clés (1-2% max)
+• Minimum 1500 mots avec valeur ajoutée
+• Monitoring performances + optimisations
+
+**Technologies utilisées :**
+API Ahrefs, Claude Sonnet 4 / GPT-5, N8N automation, WordPress REST API
+
+**ROI attendu (base 2 articles/semaine) :**
+• Mois 1-2 : +50-100 visiteurs/mois
+• Mois 3-4 : +200-400 visiteurs/mois
+• Mois 5-6 : +500-1000 visiteurs/mois`
+        },
         levels: [
           { name: 'Essentiel', price: 350, features: ['2 articles/mois', 'Livrés en document', 'Optimisés SEO'], recommended: 'Démarrage ou budget limité', color: 'blue' },
           { name: 'Avancé', price: 500, features: ['4 articles/mois', 'Push WordPress brouillon', 'Recherche mots-clés incluse'], recommended: 'Croissance régulière', color: 'indigo', popular: true },
@@ -133,6 +227,31 @@
         title: 'E. Suivi & Collaboration',
         description: 'Un accompagnement adapté à vos besoins, du simple reporting mensuel à un suivi rapproché avec réunions régulières.',
         icon: '🤝',
+        detailedInfo: {
+          title: 'Suivi & Collaboration - En détail',
+          content: `Un accompagnement SEO efficace nécessite un suivi régulier et une communication claire.
+
+**Ce que comprend le reporting :**
+• Évolution du trafic organique
+• Positions des mots-clés cibles
+• Nouveaux backlinks acquis
+• Erreurs techniques détectées
+• Actions réalisées le mois précédent
+• Recommandations pour le mois suivant
+
+**Format des meetings :**
+• Présentation des résultats
+• Discussion des priorités
+• Questions/réponses
+• Définition des prochaines actions
+
+**Outils de collaboration :**
+• Dashboard Looker Studio (optionnel)
+• Espace partagé pour les livrables
+• Support email pour les questions urgentes
+
+**Notre engagement :** Transparence totale sur les actions réalisées et les résultats obtenus.`
+        },
         levels: [
           { name: 'Essentiel', price: 100, features: ['Reporting email mensuel', 'Métriques clés'], recommended: 'Autonome, peu de questions', color: 'blue' },
           { name: 'Avancé', price: 200, features: ['1 meeting/mois', 'Récap + brief mensuel', 'Support email'], recommended: 'Échanges réguliers', color: 'indigo', popular: true },
@@ -147,7 +266,7 @@
     ];
 
     // Composant carte de niveau
-    function LevelCard({ level, isSelected, onSelect }) {
+    function LevelCard({ level, isSelected, onSelect, disabled }) {
       const colorStyles = {
         blue: { border: isSelected ? 'border-blue-500 ring-2 ring-blue-500 bg-blue-50' : 'border-blue-200 hover:border-blue-400', badge: 'bg-blue-100 text-blue-700' },
         indigo: { border: isSelected ? 'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50' : 'border-indigo-200 hover:border-indigo-400', badge: 'bg-indigo-100 text-indigo-700' },
@@ -157,8 +276,8 @@
       const styles = colorStyles[level.color];
 
       return (
-        <div onClick={onSelect} className={`relative p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 ${styles.border}`}>
-          {level.popular && (
+        <div onClick={disabled ? undefined : onSelect} className={`level-card relative p-5 rounded-xl border-2 transition-all duration-200 ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} ${styles.border}`}>
+          {level.popular && !disabled && (
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-semibold rounded-full whitespace-nowrap">
               Populaire
             </span>
@@ -166,7 +285,7 @@
           
           <div className="flex items-center justify-between mb-3">
             <h4 className="font-semibold text-gray-900">{level.name}</h4>
-            {isSelected && (
+            {isSelected && !disabled && (
               <div className={`w-6 h-6 rounded-full flex items-center justify-center ${styles.badge}`}>
                 <CheckIcon />
               </div>
@@ -187,7 +306,6 @@
             ))}
           </ul>
           
-          {/* CORRECTION: inline-flex items-center gap-1 pour garder icône et texte sur la même ligne */}
           <div className={`text-xs px-3 py-2 rounded-lg ${styles.badge} inline-flex items-center gap-1`}>
             <span className="flex-shrink-0"><InfoIcon /></span>
             <span>{level.recommended}</span>
@@ -196,32 +314,92 @@
       );
     }
 
-    // Composant section service
-    function ServiceSection({ service, selection, onSelect }) {
+    // Composant section service avec "Non merci" et "En savoir plus"
+    function ServiceSection({ service, selection, onSelect, onDisable, isDisabled }) {
+      const [showDetails, setShowDetails] = useState(false);
+
       return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 fade-in">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-3xl">{service.icon}</span>
-            <h3 className="text-xl font-bold text-gray-900">{service.title}</h3>
+        <div className={`bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 fade-in ${isDisabled ? 'disabled-section' : ''}`}>
+          {/* Header avec titre et bouton Non merci */}
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">{service.icon}</span>
+              <h3 className="text-xl font-bold text-gray-900">{service.title}</h3>
+            </div>
+            
+            {/* Bouton Non merci */}
+            <button
+              onClick={() => onDisable(service.id)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                isDisabled 
+                  ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700'
+              }`}
+            >
+              {isDisabled ? (
+                <>
+                  <CheckIcon /> Réactiver
+                </>
+              ) : (
+                <>
+                  <XIcon /> Non merci
+                </>
+              )}
+            </button>
           </div>
           
-          <p className="text-gray-600 mb-6">{service.description}</p>
+          <p className="text-gray-600 mb-4">{service.description}</p>
           
-          <div className="grid md:grid-cols-3 gap-4">
-            {service.levels.map((level, idx) => (
-              <LevelCard
-                key={idx}
-                level={level}
-                isSelected={selection === idx}
-                onSelect={() => onSelect(service.id, idx)}
-              />
-            ))}
-          </div>
+          {/* Bouton En savoir plus */}
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="mb-4 text-indigo-600 text-sm font-medium flex items-center gap-1 hover:text-indigo-700 transition-colors"
+          >
+            <span>{showDetails ? 'Masquer les détails' : 'En savoir plus'}</span>
+            <span className={`transform transition-transform ${showDetails ? 'rotate-180' : ''}`}>
+              <ChevronDownIcon />
+            </span>
+          </button>
           
-          {selection === null && (
-            <p className="mt-4 text-sm text-gray-400 text-center">
-              Cliquez sur un niveau pour l'ajouter à votre devis
-            </p>
+          {/* Section détails expandable */}
+          {showDetails && (
+            <div className="mb-6 p-4 bg-indigo-50 rounded-xl border border-indigo-100 fade-in">
+              <h4 className="font-semibold text-indigo-900 mb-3">{service.detailedInfo.title}</h4>
+              <div className="text-sm text-indigo-800 whitespace-pre-line leading-relaxed">
+                {service.detailedInfo.content}
+              </div>
+            </div>
+          )}
+          
+          {/* Cartes des niveaux */}
+          {!isDisabled && (
+            <>
+              <div className="grid md:grid-cols-3 gap-4">
+                {service.levels.map((level, idx) => (
+                  <LevelCard
+                    key={idx}
+                    level={level}
+                    isSelected={selection === idx}
+                    onSelect={() => onSelect(service.id, idx)}
+                    disabled={isDisabled}
+                  />
+                ))}
+              </div>
+              
+              {selection === null && (
+                <p className="mt-4 text-sm text-gray-400 text-center">
+                  Cliquez sur un niveau pour l'ajouter à votre devis
+                </p>
+              )}
+            </>
+          )}
+          
+          {/* Message quand désactivé */}
+          {isDisabled && (
+            <div className="py-8 text-center">
+              <p className="text-gray-500">Ce service n'est pas inclus dans votre devis</p>
+              <p className="text-sm text-gray-400 mt-1">Cliquez sur "Réactiver" pour l'ajouter</p>
+            </div>
           )}
         </div>
       );
@@ -229,7 +407,10 @@
 
     // Composant principal
     function SEOCalculator() {
+      // null = pas sélectionné, number = niveau sélectionné
       const [selections, setSelections] = useState({ audit: null, corrections: null, pages: null, contenu: null, suivi: null });
+      // Services désactivés via "Non merci"
+      const [disabledServices, setDisabledServices] = useState({ audit: false, corrections: false, pages: false, contenu: false, suivi: false });
       const [setupSelections, setSetupSelections] = useState({ tracking: false, dashboard: false });
       const [duration, setDuration] = useState(4);
       const [showResult, setShowResult] = useState(false);
@@ -240,11 +421,22 @@
         setSelections(prev => ({ ...prev, [serviceId]: prev[serviceId] === levelIdx ? null : levelIdx }));
       };
 
+      const handleDisable = (serviceId) => {
+        setDisabledServices(prev => {
+          const newDisabled = !prev[serviceId];
+          // Si on désactive, on enlève aussi la sélection
+          if (newDisabled) {
+            setSelections(prevSel => ({ ...prevSel, [serviceId]: null }));
+          }
+          return { ...prev, [serviceId]: newDisabled };
+        });
+      };
+
       const toggleSetup = (id) => {
         setSetupSelections(prev => ({ ...prev, [id]: !prev[id] }));
       };
 
-      // Calcul du total
+      // Calcul du total (exclut les services désactivés)
       const { monthlyTotal, setupTotal, selectedServices, discount } = useMemo(() => {
         let monthly = 0;
         let setup = 0;
@@ -252,7 +444,8 @@
 
         services.forEach(service => {
           const levelIdx = selections[service.id];
-          if (levelIdx !== null) {
+          const isDisabled = disabledServices[service.id];
+          if (levelIdx !== null && !isDisabled) {
             const level = service.levels[levelIdx];
             monthly += level.price;
             selected.push({ service: service.title, level: level.name, price: level.price, features: level.features });
@@ -267,7 +460,7 @@
         const discountAmount = monthly * duration * discountRate;
 
         return { monthlyTotal: monthly, setupTotal: setup, selectedServices: selected, discount: discountAmount };
-      }, [selections, setupSelections, duration]);
+      }, [selections, setupSelections, duration, disabledServices]);
 
       // Prix mensuel effectif (avec remise répartie si 6 mois)
       const effectiveMonthlyPrice = duration === 6 
@@ -275,7 +468,7 @@
         : monthlyTotal;
 
       const grandTotal = (monthlyTotal * duration) + setupTotal - discount;
-      const hasSelections = Object.values(selections).some(v => v !== null);
+      const hasSelections = Object.values(selections).some((v, i) => v !== null && !disabledServices[Object.keys(selections)[i]]);
 
       const handleSubmit = async (e) => {
         e.preventDefault();
@@ -351,13 +544,20 @@
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Composez votre offre SEO</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Sélectionnez le niveau adapté pour chaque service. Pas de superflu, investissez uniquement là où ça compte.
+                Sélectionnez le niveau adapté pour chaque service ou cliquez sur "Non merci" pour les modules qui ne vous intéressent pas.
               </p>
             </section>
 
             {/* Services */}
             {services.map(service => (
-              <ServiceSection key={service.id} service={service} selection={selections[service.id]} onSelect={handleSelect} />
+              <ServiceSection 
+                key={service.id} 
+                service={service} 
+                selection={selections[service.id]} 
+                onSelect={handleSelect}
+                onDisable={handleDisable}
+                isDisabled={disabledServices[service.id]}
+              />
             ))}
 
             {/* Setup Options */}
@@ -567,7 +767,7 @@
             </div>
           )}
 
-          {/* Footer - MODIFIÉ: uniquement paul@mydigipal.com */}
+          {/* Footer */}
           <footer className="bg-white border-t border-gray-100 py-8 mt-12 mb-20 md:mb-0">
             <div className="max-w-6xl mx-auto px-4 text-center">
               <p className="text-gray-600 mb-2">Des questions ?</p>
