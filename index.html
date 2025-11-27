@@ -571,11 +571,12 @@
       };
 
       // Calcul du total (exclut les services désactivés)
-      const { monthlyTotal, oneOffTotal, setupTotal, selectedServices, discount } = useMemo(() => {
+      const { monthlyTotal, oneOffTotal, setupTotal, selectedServices, selectedSetupServices, discount } = useMemo(() => {
         let monthly = 0;
         let oneOff = 0;
         let setup = 0;
         const selected = [];
+        const selectedSetup = [];
 
         services.forEach(service => {
           const levelIdx = selections[service.id];
@@ -614,19 +615,30 @@
         });
 
         setupOptions.forEach(opt => {
-          if (setupSelections[opt.id]) setup += opt.price;
+          if (setupSelections[opt.id]) {
+            setup += opt.price;
+            selectedSetup.push({
+              service: 'F. Tracking et Reporting',
+              name: opt.name,
+              price: opt.price,
+              isOneOff: true
+            });
+          }
         });
 
         const discountRate = duration === 6 ? 0.05 : 0;
         const discountAmount = monthly * duration * discountRate;
 
-        return { monthlyTotal: monthly, oneOffTotal: oneOff, setupTotal: setup, selectedServices: selected, discount: discountAmount };
+        return { monthlyTotal: monthly, oneOffTotal: oneOff, setupTotal: setup, selectedServices: selected, selectedSetupServices: selectedSetup, discount: discountAmount };
       }, [selections, setupSelections, duration, disabledServices, cmsAddon]);
+
+      // Compte total des services (incluant les services de tracking/reporting)
+      const totalServicesCount = selectedServices.length + selectedSetupServices.length;
 
       const grandTotal = (monthlyTotal * duration) + oneOffTotal + setupTotal - discount;
       // Prix mensuel réel (incluant one-off et setup répartis sur la durée)
       const effectiveMonthlyPrice = Math.round(grandTotal / duration);
-      const hasSelections = Object.values(selections).some((v, i) => v !== null && !disabledServices[Object.keys(selections)[i]]);
+      const hasSelections = totalServicesCount > 0;
 
       const handleSubmit = async (e) => {
         e.preventDefault();
@@ -653,7 +665,7 @@
             isOneOff: s.isOneOff
           })),
           
-          // Setup détaillé
+          // Setup détaillé (F. Tracking et Reporting)
           setupDetails: {
             tracking: setupSelections.tracking ? { name: 'Tracking & Measurement Setup', price: 750 } : null,
             dashboard: setupSelections.dashboard ? { name: 'Dashboard Looker Studio', price: 500 } : null,
@@ -745,13 +757,16 @@
               />
             ))}
 
-            {/* Setup Options */}
+            {/* F. Tracking et Reporting */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 fade-in">
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-3xl">⚙️</span>
-                <h3 className="text-xl font-bold text-gray-900">Setup One-Off (optionnel)</h3>
+                <span className="text-3xl">📊</span>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">F. Tracking et Reporting</h3>
+                  <span className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded-full font-medium">Prestation ponctuelle</span>
+                </div>
               </div>
-              <p className="text-gray-600 mb-6">Des prestations ponctuelles pour poser les fondations de votre tracking.</p>
+              <p className="text-gray-600 mb-6">Des prestations ponctuelles pour poser les fondations de votre tracking et visualiser vos performances.</p>
               
               <div className="grid md:grid-cols-2 gap-4">
                 {setupOptions.map(opt => (
@@ -815,7 +830,7 @@
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-bold mb-1">Votre estimation</h3>
-                    <p className="text-indigo-200">{selectedServices.length} service{selectedServices.length > 1 ? 's' : ''} sélectionné{selectedServices.length > 1 ? 's' : ''}</p>
+                    <p className="text-indigo-200">{totalServicesCount} service{totalServicesCount > 1 ? 's' : ''} sélectionné{totalServicesCount > 1 ? 's' : ''}</p>
                   </div>
                   
                   <div className="text-right">
@@ -845,7 +860,7 @@
                 </div>
                 
                 <div className="p-6">
-                  {selectedServices.length === 0 ? (
+                  {totalServicesCount === 0 ? (
                     <p className="text-gray-500 text-center py-8">Aucun service sélectionné.</p>
                   ) : (
                     <>
@@ -881,10 +896,10 @@
                           </div>
                         ))}
                         
-                        {/* Setup */}
+                        {/* F. Tracking et Reporting */}
                         {(setupSelections.tracking || setupSelections.dashboard) && (
                           <div className="p-4 bg-amber-50 rounded-xl">
-                            <h4 className="font-semibold text-gray-900 mb-2">Setup One-Off</h4>
+                            <h4 className="font-semibold text-gray-900 mb-2">F. Tracking et Reporting <span className="text-amber-600 text-sm font-normal">(ponctuel)</span></h4>
                             {setupSelections.tracking && <div className="flex justify-between text-sm"><span>Tracking & Measurement Setup</span><span className="font-medium">750€</span></div>}
                             {setupSelections.dashboard && <div className="flex justify-between text-sm"><span>Dashboard Looker Studio</span><span className="font-medium">500€</span></div>}
                           </div>
@@ -899,13 +914,13 @@
                         </div>
                         {oneOffTotal > 0 && (
                           <div className="flex justify-between mb-2">
-                            <span className="text-gray-600">Prestations ponctuelles</span>
+                            <span className="text-gray-600">Prestations ponctuelles (A-E)</span>
                             <span className="font-semibold">{oneOffTotal}€</span>
                           </div>
                         )}
                         {setupTotal > 0 && (
                           <div className="flex justify-between mb-2">
-                            <span className="text-gray-600">Setup one-off</span>
+                            <span className="text-gray-600">F. Tracking et Reporting</span>
                             <span className="font-semibold">{setupTotal}€</span>
                           </div>
                         )}
