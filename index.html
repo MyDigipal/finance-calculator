@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://n8n.mydigipal.com">
+  <link rel="dns-prefetch" href="https://n8n.mydigipal.com:5678">
 
   <!-- Performance: Preload critical resources -->
   <link rel="preload" href="https://unpkg.com/react@18/umd/react.production.min.js" as="script">
@@ -1965,7 +1965,7 @@
 
         try {
           // Performance: Use retry logic with exponential backoff
-          await fetchWithRetry('https://n8n.mydigipal.com/webhook/calculateur-marketing', {
+          await fetchWithRetry('https://n8n.mydigipal.com:5678/webhook/calculateur-marketing', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
