@@ -1627,7 +1627,7 @@
       const selections = {};
       const disabled = {};
       domains.forEach(domain => {
-        const services = servicesByDomain[domain];
+        const services = servicesByDomain[domain] || [];
         services.forEach(service => {
           selections[service.id] = null;
           disabled[service.id] = false;
@@ -2002,11 +2002,15 @@
                 <div className="border-l border-gray-200 pl-3">
                   <p className="text-sm font-medium text-gray-700">Simulateur Marketing Digital</p>
                   <div className="flex gap-1 mt-1">
-                    {selectedDomains.map(d => (
-                      <span key={d} className="text-xs px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">
-                        {domainConfig[d].icon} {domainConfig[d].name}
-                      </span>
-                    ))}
+                    {selectedDomains.map(d => {
+                      const cfg = domainConfig[d];
+                      if (!cfg) return null;
+                      return (
+                        <span key={d} className="text-xs px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">
+                          {cfg.icon} {cfg.name}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -2045,6 +2049,7 @@
             {/* Services by Domain */}
             {selectedDomains.map(domain => {
               const config = domainConfig[domain];
+              if (!config) return null;
               const domainServices = servicesByDomain[domain] || [];
               const needsBudgetSlider = domain === DOMAINS.GOOGLE_ADS || domain === DOMAINS.PAID_SOCIAL;
 
@@ -2199,6 +2204,7 @@
                           const domainServices = selectedServicesByDomain[domain] || [];
                           if (domainServices.length === 0) return null;
                           const config = domainConfig[domain];
+                          if (!config) return null;
                           const hasBudget = domain === DOMAINS.GOOGLE_ADS || domain === DOMAINS.PAID_SOCIAL;
 
                           return (
