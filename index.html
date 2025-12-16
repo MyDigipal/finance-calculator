@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulateur de Management SEO | MyDigipal</title>
-  <meta name="description" content="Composez votre offre SEO sur-mesure avec MyDigipal. Calculateur interactif pour estimer votre accompagnement référencement.">
+  <title>Simulateur Marketing Digital | MyDigipal</title>
+  <meta name="description" content="Composez votre offre marketing digital sur-mesure avec MyDigipal. Calculateur interactif pour SEO, Google Ads et Paid Social.">
 
   <!-- Performance: DNS prefetch and preconnect for external resources -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -158,8 +158,53 @@
       );
     });
 
+    // Domain constants
+    const DOMAINS = Object.freeze({
+      SEO: 'seo',
+      GOOGLE_ADS: 'google_ads',
+      PAID_SOCIAL: 'paid_social'
+    });
+
+    const domainConfig = Object.freeze({
+      [DOMAINS.SEO]: {
+        id: DOMAINS.SEO,
+        name: 'SEO',
+        icon: '🔍',
+        description: 'Référencement naturel et visibilité organique',
+        color: 'indigo'
+      },
+      [DOMAINS.GOOGLE_ADS]: {
+        id: DOMAINS.GOOGLE_ADS,
+        name: 'Google Ads',
+        icon: '📊',
+        description: 'Publicité sur le réseau Google (Search, Display, YouTube)',
+        color: 'blue'
+      },
+      [DOMAINS.PAID_SOCIAL]: {
+        id: DOMAINS.PAID_SOCIAL,
+        name: 'Paid Social',
+        icon: '📱',
+        description: 'Publicité sur les réseaux sociaux (Meta, LinkedIn, TikTok)',
+        color: 'purple'
+      }
+    });
+
+    // Management fee calculation for ads (% of budget with minimum)
+    const MANAGEMENT_FEE_CONFIG = Object.freeze({
+      [DOMAINS.GOOGLE_ADS]: { percentage: 15, minimum: 300 },
+      [DOMAINS.PAID_SOCIAL]: { percentage: 15, minimum: 300 }
+    });
+
+    // Budget slider configuration
+    const BUDGET_CONFIG = Object.freeze({
+      min: 500,
+      max: 50000,
+      step: 500,
+      default: 2000
+    });
+
     // Performance: Freeze static data to prevent accidental mutations and enable engine optimizations
-    const services = Object.freeze([
+    const seoServices = Object.freeze([
       {
         id: 'audit',
         title: 'A. Audit SEO',
@@ -521,6 +566,617 @@
       }
     ]);
 
+    // Google Ads Services
+    const googleAdsServices = Object.freeze([
+      {
+        id: 'audit_ads',
+        title: 'A. Audit Google Ads',
+        description: 'Analyse complète de vos campagnes existantes pour identifier les optimisations et opportunités de croissance.',
+        icon: '🔍',
+        isOneOff: true,
+        detailedInfo: {
+          title: 'Audit Google Ads - C\'est quoi exactement ?',
+          content: {
+            intro: 'Un diagnostic complet de votre compte Google Ads pour identifier les fuites de budget et les opportunités manquées.',
+            sections: [
+              {
+                title: 'Ce que nous analysons',
+                items: [
+                  'Structure du compte (campagnes, groupes d\'annonces)',
+                  'Qualité des mots-clés et Quality Score',
+                  'Performance des annonces (CTR, taux de conversion)',
+                  'Paramètres d\'enchères et stratégies utilisées',
+                  'Extensions d\'annonces configurées',
+                  'Audiences et ciblage géographique',
+                  'Suivi des conversions et attribution'
+                ]
+              },
+              {
+                title: 'Version Avancée - En plus',
+                items: [
+                  'Analyse concurrentielle via Auction Insights',
+                  'Étude des termes de recherche sur 6 mois',
+                  'Recommandations budgétaires optimales',
+                  'Roadmap d\'optimisation priorisée'
+                ]
+              }
+            ],
+            conclusion: 'Livrable : Rapport d\'audit avec quick wins et plan d\'action sur 3 mois.'
+          }
+        },
+        roiInfo: {
+          title: '📈 Ce que ça vous apporte',
+          content: {
+            intro: 'Un audit permet souvent d\'économiser 20-40% du budget tout en améliorant les performances.',
+            sections: [
+              {
+                title: 'ROI typique d\'un audit',
+                items: [
+                  'Identification des mots-clés qui gaspillent votre budget',
+                  'Amélioration du Quality Score = coûts par clic réduits',
+                  'Détection des opportunités de mots-clés manquées',
+                  'Optimisation des enchères selon la valeur réelle des conversions'
+                ]
+              },
+              {
+                title: 'Exemples concrets',
+                items: [
+                  'Client e-commerce : -35% de coût par acquisition après audit',
+                  'Client B2B : +50% de leads qualifiés à budget constant',
+                  'Client local : doublement du ROI en optimisant le ciblage géo'
+                ]
+              }
+            ],
+            conclusion: '→ L\'audit se rentabilise généralement dès le premier mois d\'optimisation.'
+          }
+        },
+        levels: [
+          { name: 'Basic', price: 300, features: ['Analyse de la structure', 'Audit des mots-clés', 'Recommandations générales'], recommended: 'Comptes < 2000€/mois', color: 'blue' },
+          { name: 'Avancé', price: 500, features: ['Analyse complète', 'Étude concurrentielle', 'Audit des conversions', 'Plan d\'action priorisé'], recommended: 'Comptes > 2000€/mois', color: 'indigo', popular: true }
+        ]
+      },
+      {
+        id: 'setup_ads',
+        title: 'B. Setup de Campagnes',
+        description: 'Création et configuration de vos campagnes Google Ads avec une structure optimisée dès le départ.',
+        icon: '⚙️',
+        isOneOff: true,
+        detailedInfo: {
+          title: 'Setup de Campagnes - C\'est quoi exactement ?',
+          content: {
+            intro: 'La création from scratch d\'un compte Google Ads bien structuré, ou la restructuration complète d\'un compte existant.',
+            sections: [
+              {
+                title: 'Ce que nous configurons',
+                items: [
+                  'Structure de compte optimale (campagnes, groupes d\'annonces)',
+                  'Recherche et sélection des mots-clés',
+                  'Rédaction des annonces (RSA, extensions)',
+                  'Configuration du ciblage (géo, audiences, appareils)',
+                  'Paramétrage des enchères et budgets',
+                  'Configuration du suivi des conversions'
+                ]
+              },
+              {
+                title: 'Version Premium - En plus',
+                items: [
+                  'Setup campagnes Display/YouTube',
+                  'Configuration du remarketing',
+                  'Audiences personnalisées et similaires',
+                  'Tests A/B des annonces dès le lancement'
+                ]
+              }
+            ],
+            conclusion: 'Livrable : Compte prêt à être activé avec documentation complète.'
+          }
+        },
+        roiInfo: {
+          title: '🚀 Ce que ça vous apporte',
+          content: {
+            intro: 'Un setup bien fait évite des mois de corrections et de budget gaspillé.',
+            sections: [
+              {
+                title: 'Avantages d\'un setup professionnel',
+                items: [
+                  'Quality Score élevé dès le départ = CPCs plus bas',
+                  'Structure scalable pour accompagner votre croissance',
+                  'Pas de temps perdu à corriger des erreurs de débutant',
+                  'Conversions trackées correctement dès jour 1'
+                ]
+              },
+              {
+                title: 'Ce que ça évite',
+                items: [
+                  'Budget gaspillé sur des mots-clés non pertinents',
+                  'Annonces refusées pour non-conformité',
+                  'Données de conversion incorrectes pendant des mois',
+                  'Structure de compte impossible à optimiser'
+                ]
+              }
+            ],
+            conclusion: '→ Un bon setup est un investissement qui se rentabilise sur toute la durée de vie du compte.'
+          }
+        },
+        levels: [
+          { name: 'Essentiel', price: 400, features: ['1-2 campagnes Search', 'Recherche mots-clés', '3 groupes d\'annonces', 'Suivi conversions basique'], recommended: 'Démarrage simple', color: 'blue' },
+          { name: 'Avancé', price: 700, features: ['3-5 campagnes Search', 'Recherche approfondie', 'Extensions complètes', 'Remarketing basique'], recommended: 'Stratégie complète', color: 'indigo', popular: true },
+          { name: 'Premium', price: 1200, features: ['Campagnes Search + Display', 'YouTube Ads', 'Remarketing avancé', 'Audiences personnalisées', 'A/B testing'], recommended: 'Présence multi-canal', color: 'purple' }
+        ]
+      },
+      {
+        id: 'gestion_ads',
+        title: 'C. Gestion Mensuelle',
+        description: 'Optimisation continue de vos campagnes pour maximiser votre ROI publicitaire.',
+        icon: '📈',
+        hasBudgetFee: true,
+        detailedInfo: {
+          title: 'Gestion Mensuelle - C\'est quoi exactement ?',
+          content: {
+            intro: 'Un accompagnement mensuel pour optimiser vos campagnes et maximiser chaque euro investi.',
+            sections: [
+              {
+                title: 'Ce que nous faisons chaque mois',
+                items: [
+                  'Ajustement des enchères selon les performances',
+                  'Ajout/exclusion de mots-clés',
+                  'Tests et optimisation des annonces',
+                  'Gestion des audiences et remarketing',
+                  'Optimisation du budget entre campagnes',
+                  'Veille concurrentielle'
+                ]
+              },
+              {
+                title: 'Reporting inclus',
+                items: [
+                  'Dashboard temps réel',
+                  'Rapport mensuel commenté',
+                  'Analyse des tendances',
+                  'Recommandations d\'évolution'
+                ]
+              }
+            ],
+            conclusion: 'Note : Les frais de gestion sont calculés en % de votre budget publicitaire (minimum 300€/mois).'
+          }
+        },
+        roiInfo: {
+          title: '💰 Ce que ça vous apporte',
+          content: {
+            intro: 'Une gestion active améliore typiquement le ROI de 30-50% vs un compte laissé en autopilote.',
+            sections: [
+              {
+                title: 'Impact de la gestion continue',
+                items: [
+                  'Réduction progressive des CPCs grâce à l\'optimisation',
+                  'Amélioration constante du taux de conversion',
+                  'Adaptation aux évolutions du marché et de la concurrence',
+                  'Découverte de nouvelles opportunités de croissance'
+                ]
+              },
+              {
+                title: 'Comparaison avec/sans gestion',
+                items: [
+                  'Compte non géré : performance qui décline avec le temps',
+                  'Compte géré : amélioration continue des métriques',
+                  'ROI moyen Google Ads : 200% (2€ gagnés pour 1€ investi)',
+                  'ROI avec gestion optimisée : jusqu\'à 400-800%'
+                ]
+              }
+            ],
+            conclusion: '→ Les frais de gestion sont largement compensés par l\'amélioration des performances.'
+          }
+        },
+        levels: [
+          { name: 'Essentiel', price: 0, features: ['Optimisations hebdomadaires', 'Ajustement des enchères', 'Rapport mensuel'], recommended: 'Budgets < 3000€/mois', color: 'blue', budgetBased: true },
+          { name: 'Avancé', price: 200, features: ['Optimisations bi-hebdomadaires', 'Tests A/B continus', 'Rapport détaillé', '1 call/mois'], recommended: 'Budgets 3000-10000€/mois', color: 'indigo', popular: true, budgetBased: true },
+          { name: 'Premium', price: 400, features: ['Optimisations continues', 'Stratégies avancées', 'Reporting personnalisé', '2 calls/mois', 'Support prioritaire'], recommended: 'Budgets > 10000€/mois', color: 'purple', budgetBased: true }
+        ]
+      },
+      {
+        id: 'reporting_ads',
+        title: 'D. Reporting & Analytics',
+        description: 'Dashboards personnalisés et analyses approfondies pour piloter vos investissements.',
+        icon: '📊',
+        detailedInfo: {
+          title: 'Reporting & Analytics - C\'est quoi exactement ?',
+          content: {
+            intro: 'Des outils de reporting sur-mesure pour suivre vos KPIs et prendre des décisions éclairées.',
+            sections: [
+              {
+                title: 'Ce que nous mettons en place',
+                items: [
+                  'Dashboard Looker Studio personnalisé',
+                  'Intégration des données Google Ads, Analytics, CRM',
+                  'Visualisations claires et actionnables',
+                  'Alertes automatiques sur les anomalies'
+                ]
+              },
+              {
+                title: 'Analyses incluses',
+                items: [
+                  'Attribution multi-touch',
+                  'Analyse du parcours client',
+                  'Segmentation des audiences',
+                  'Comparaisons période vs période'
+                ]
+              }
+            ],
+            conclusion: 'Livrable : Accès à un dashboard en temps réel + exports automatisés.'
+          }
+        },
+        roiInfo: {
+          title: '📈 Ce que ça vous apporte',
+          content: {
+            intro: 'Des données claires permettent de prendre de meilleures décisions et d\'optimiser plus rapidement.',
+            sections: [
+              {
+                title: 'Bénéfices du reporting avancé',
+                items: [
+                  'Visibilité en temps réel sur vos performances',
+                  'Identification rapide des problèmes',
+                  'Meilleure allocation budgétaire',
+                  'Justification du ROI auprès de la direction'
+                ]
+              },
+              {
+                title: 'Ce que vous gagnez',
+                items: [
+                  'Temps : plus besoin de compiler les données manuellement',
+                  'Réactivité : détection immédiate des anomalies',
+                  'Confiance : décisions basées sur la data, pas l\'intuition'
+                ]
+              }
+            ],
+            conclusion: '→ Un bon reporting est le GPS de votre stratégie publicitaire.'
+          }
+        },
+        levels: [
+          { name: 'Essentiel', price: 150, features: ['Dashboard standard', 'KPIs principaux', 'Mise à jour quotidienne'], recommended: 'Suivi basique', color: 'blue' },
+          { name: 'Avancé', price: 300, features: ['Dashboard personnalisé', 'Multi-sources', 'Alertes automatiques', 'Analyse mensuelle'], recommended: 'Pilotage avancé', color: 'indigo', popular: true }
+        ]
+      }
+    ]);
+
+    // Paid Social Services
+    const paidSocialServices = Object.freeze([
+      {
+        id: 'audit_social',
+        title: 'A. Audit Social Ads',
+        description: 'Analyse de vos campagnes publicitaires sur les réseaux sociaux (Meta, LinkedIn, TikTok).',
+        icon: '🔍',
+        isOneOff: true,
+        detailedInfo: {
+          title: 'Audit Social Ads - C\'est quoi exactement ?',
+          content: {
+            intro: 'Un diagnostic complet de vos campagnes sur Meta (Facebook/Instagram), LinkedIn ou TikTok.',
+            sections: [
+              {
+                title: 'Ce que nous analysons',
+                items: [
+                  'Structure des campagnes et ensembles de publicités',
+                  'Qualité des audiences ciblées',
+                  'Performance des créatifs (images, vidéos, carrousels)',
+                  'Paramètres du Pixel et suivi des conversions',
+                  'Stratégies d\'enchères utilisées',
+                  'Répartition budgétaire entre plateformes'
+                ]
+              },
+              {
+                title: 'Version Avancée - En plus',
+                items: [
+                  'Benchmark sectoriel des performances',
+                  'Analyse des audiences similaires',
+                  'Audit créatif approfondi avec recommandations',
+                  'Roadmap d\'optimisation sur 3 mois'
+                ]
+              }
+            ],
+            conclusion: 'Livrable : Rapport d\'audit avec quick wins et recommandations créatives.'
+          }
+        },
+        roiInfo: {
+          title: '📈 Ce que ça vous apporte',
+          content: {
+            intro: 'Les campagnes Social Ads mal optimisées peuvent gaspiller jusqu\'à 50% du budget.',
+            sections: [
+              {
+                title: 'ROI typique d\'un audit Social',
+                items: [
+                  'Identification des audiences qui ne convertissent pas',
+                  'Détection des créatifs sous-performants',
+                  'Optimisation du Pixel pour un meilleur retargeting',
+                  'Amélioration de l\'attribution des conversions'
+                ]
+              },
+              {
+                title: 'Résultats observés',
+                items: [
+                  'Réduction moyenne de 25% du coût par lead',
+                  'Amélioration du ROAS de 40% en moyenne',
+                  'Meilleure qualité des leads générés'
+                ]
+              }
+            ],
+            conclusion: '→ Un audit révèle souvent des opportunités d\'optimisation majeures.'
+          }
+        },
+        levels: [
+          { name: 'Basic', price: 300, features: ['Audit 1 plateforme', 'Analyse des campagnes', 'Recommandations générales'], recommended: 'Une seule plateforme', color: 'blue' },
+          { name: 'Avancé', price: 500, features: ['Audit multi-plateformes', 'Benchmark sectoriel', 'Audit créatif', 'Plan d\'action détaillé'], recommended: 'Stratégie cross-platform', color: 'indigo', popular: true }
+        ]
+      },
+      {
+        id: 'setup_social',
+        title: 'B. Setup de Campagnes',
+        description: 'Création et configuration de vos campagnes publicitaires sur les réseaux sociaux.',
+        icon: '⚙️',
+        isOneOff: true,
+        detailedInfo: {
+          title: 'Setup Campagnes Social - C\'est quoi exactement ?',
+          content: {
+            intro: 'La mise en place complète de votre présence publicitaire sur Meta, LinkedIn et/ou TikTok.',
+            sections: [
+              {
+                title: 'Ce que nous configurons',
+                items: [
+                  'Création/vérification du Business Manager',
+                  'Installation et configuration du Pixel',
+                  'Création des audiences (custom, lookalike)',
+                  'Structure des campagnes (awareness, consideration, conversion)',
+                  'Paramétrage des événements de conversion',
+                  'Configuration du catalogue produits (e-commerce)'
+                ]
+              },
+              {
+                title: 'Version Premium - En plus',
+                items: [
+                  'Setup multi-plateformes',
+                  'Intégration CRM pour audiences',
+                  'Configuration API Conversions',
+                  'Stratégie de test A/B'
+                ]
+              }
+            ],
+            conclusion: 'Livrable : Compte publicitaire prêt avec documentation et guide d\'utilisation.'
+          }
+        },
+        roiInfo: {
+          title: '🚀 Ce que ça vous apporte',
+          content: {
+            intro: 'Un setup professionnel garantit des données fiables et des campagnes efficaces dès le départ.',
+            sections: [
+              {
+                title: 'Avantages d\'un setup professionnel',
+                items: [
+                  'Pixel correctement configuré = données de conversion fiables',
+                  'Audiences bien segmentées = meilleur ciblage',
+                  'Structure scalable pour accompagner votre croissance',
+                  'Conformité avec les politiques des plateformes'
+                ]
+              },
+              {
+                title: 'Erreurs évitées',
+                items: [
+                  'Pixel mal installé (données perdues pendant des mois)',
+                  'Audiences trop larges ou trop restreintes',
+                  'Budget mal réparti entre les phases du funnel',
+                  'Compte publicitaire bloqué pour non-conformité'
+                ]
+              }
+            ],
+            conclusion: '→ Un bon setup est la fondation de campagnes rentables.'
+          }
+        },
+        levels: [
+          { name: 'Essentiel', price: 400, features: ['Setup 1 plateforme', 'Configuration Pixel', 'Audiences de base', '1 campagne test'], recommended: 'Démarrage simple', color: 'blue' },
+          { name: 'Avancé', price: 700, features: ['Setup 2 plateformes', 'Audiences avancées', 'API Conversions', '2 campagnes test'], recommended: 'Stratégie complète', color: 'indigo', popular: true },
+          { name: 'Premium', price: 1000, features: ['Setup toutes plateformes', 'Intégration CRM', 'Catalogue produits', 'Formation équipe'], recommended: 'E-commerce / Scale-up', color: 'purple' }
+        ]
+      },
+      {
+        id: 'gestion_social',
+        title: 'C. Gestion Mensuelle',
+        description: 'Optimisation continue de vos campagnes Social Ads pour maximiser votre ROI.',
+        icon: '📈',
+        hasBudgetFee: true,
+        detailedInfo: {
+          title: 'Gestion Mensuelle - C\'est quoi exactement ?',
+          content: {
+            intro: 'Un accompagnement mensuel pour optimiser vos campagnes et maintenir des performances élevées.',
+            sections: [
+              {
+                title: 'Ce que nous faisons chaque mois',
+                items: [
+                  'Optimisation des audiences (refresh, exclusions)',
+                  'Rotation et test des créatifs',
+                  'Ajustement des enchères et budgets',
+                  'Gestion du retargeting',
+                  'Scaling des campagnes performantes',
+                  'Veille sur les nouveautés des plateformes'
+                ]
+              },
+              {
+                title: 'Reporting inclus',
+                items: [
+                  'Suivi des KPIs clés (ROAS, CPA, CPM)',
+                  'Rapport mensuel avec insights',
+                  'Recommandations créatives',
+                  'Benchmark vs secteur'
+                ]
+              }
+            ],
+            conclusion: 'Note : Les frais de gestion sont calculés en % de votre budget publicitaire (minimum 300€/mois).'
+          }
+        },
+        roiInfo: {
+          title: '💰 Ce que ça vous apporte',
+          content: {
+            intro: 'Les algorithmes Social Ads évoluent constamment. Une gestion active est essentielle.',
+            sections: [
+              {
+                title: 'Impact de la gestion continue',
+                items: [
+                  'Lutte contre la fatigue publicitaire',
+                  'Adaptation aux changements d\'algorithmes',
+                  'Optimisation continue des coûts d\'acquisition',
+                  'Découverte de nouvelles audiences rentables'
+                ]
+              },
+              {
+                title: 'Résultats typiques',
+                items: [
+                  'ROAS moyen Meta Ads : 4x avec gestion optimisée',
+                  'Réduction de 30% du CPA sur 6 mois',
+                  'Augmentation de 50% du volume de conversions'
+                ]
+              }
+            ],
+            conclusion: '→ Sans gestion active, les performances déclinent en 2-3 semaines.'
+          }
+        },
+        levels: [
+          { name: 'Essentiel', price: 0, features: ['Optimisations hebdomadaires', 'Rotation des créatifs', 'Rapport mensuel'], recommended: 'Budgets < 3000€/mois', color: 'blue', budgetBased: true },
+          { name: 'Avancé', price: 200, features: ['Optimisations bi-hebdo', 'Tests créatifs A/B', 'Rapport détaillé', '1 call/mois'], recommended: 'Budgets 3000-10000€/mois', color: 'indigo', popular: true, budgetBased: true },
+          { name: 'Premium', price: 400, features: ['Optimisations continues', 'Creative strategy', 'Reporting avancé', '2 calls/mois', 'Support prioritaire'], recommended: 'Budgets > 10000€/mois', color: 'purple', budgetBased: true }
+        ]
+      },
+      {
+        id: 'creatifs_social',
+        title: 'D. Création de Créatifs',
+        description: 'Production de visuels et vidéos publicitaires optimisés pour les réseaux sociaux.',
+        icon: '🎨',
+        detailedInfo: {
+          title: 'Création de Créatifs - C\'est quoi exactement ?',
+          content: {
+            intro: 'La production de contenus publicitaires (images, vidéos, carrousels) optimisés pour chaque plateforme.',
+            sections: [
+              {
+                title: 'Ce que nous produisons',
+                items: [
+                  'Visuels statiques (formats story, feed, square)',
+                  'Carrousels engageants',
+                  'Vidéos courtes (Reels, TikTok, Stories)',
+                  'UGC-style content',
+                  'Déclinaisons pour tests A/B'
+                ]
+              },
+              {
+                title: 'Notre process',
+                items: [
+                  'Brief créatif et moodboard',
+                  'Proposition de concepts',
+                  'Production et retouches',
+                  '2 rounds de révisions inclus'
+                ]
+              }
+            ],
+            conclusion: 'Livrable : Pack de créatifs prêts à être uploadés avec specs par plateforme.'
+          }
+        },
+        roiInfo: {
+          title: '🎯 Ce que ça vous apporte',
+          content: {
+            intro: 'Les créatifs sont responsables de 50-70% de la performance d\'une campagne Social.',
+            sections: [
+              {
+                title: 'Impact des créatifs sur les performances',
+                items: [
+                  'Un bon créatif peut diviser le CPM par 2',
+                  'Les vidéos génèrent 20-30% plus d\'engagement',
+                  'Le format UGC améliore le CTR de 40%',
+                  'La variété des créatifs prolonge la durée de vie des campagnes'
+                ]
+              },
+              {
+                title: 'Pourquoi externaliser',
+                items: [
+                  'Expertise des formats et best practices par plateforme',
+                  'Production rapide et scalable',
+                  'Tests A/B systématiques pour trouver les gagnants',
+                  'Pas besoin de recruter un graphiste interne'
+                ]
+              }
+            ],
+            conclusion: '→ Investir dans les créatifs est souvent plus rentable qu\'augmenter le budget pub.'
+          }
+        },
+        levels: [
+          { name: '5 créatifs', price: 300, features: ['5 visuels statiques', 'Formats multiples', '2 révisions'], recommended: 'Test et démarrage', color: 'blue' },
+          { name: '10 créatifs', price: 500, features: ['10 visuels (statiques + carrousels)', 'Tous formats', 'Brief stratégique'], recommended: 'Rotation régulière', color: 'indigo', popular: true },
+          { name: '15 créatifs + vidéos', price: 900, features: ['10 visuels + 5 vidéos', 'UGC-style', 'Storyboard inclus', 'Musique licensée'], recommended: 'Performance maximale', color: 'purple' }
+        ]
+      },
+      {
+        id: 'reporting_social',
+        title: 'E. Reporting & Analytics',
+        description: 'Dashboards personnalisés pour suivre vos performances Social Ads en temps réel.',
+        icon: '📊',
+        detailedInfo: {
+          title: 'Reporting Social - C\'est quoi exactement ?',
+          content: {
+            intro: 'Des dashboards centralisés pour visualiser les performances de toutes vos campagnes Social.',
+            sections: [
+              {
+                title: 'Ce que nous mettons en place',
+                items: [
+                  'Dashboard Looker Studio multi-plateformes',
+                  'Consolidation Meta + LinkedIn + TikTok',
+                  'Intégration avec Google Analytics',
+                  'Visualisation du funnel complet'
+                ]
+              },
+              {
+                title: 'Métriques suivies',
+                items: [
+                  'ROAS, CPA, CPM par plateforme et campagne',
+                  'Engagement (likes, comments, shares)',
+                  'Attribution et parcours client',
+                  'Comparaisons période vs période'
+                ]
+              }
+            ],
+            conclusion: 'Livrable : Dashboard en temps réel + alertes automatiques.'
+          }
+        },
+        roiInfo: {
+          title: '📈 Ce que ça vous apporte',
+          content: {
+            intro: 'Une vision unifiée de vos performances pour prendre les bonnes décisions.',
+            sections: [
+              {
+                title: 'Bénéfices du reporting centralisé',
+                items: [
+                  'Plus de temps perdu à compiler des exports',
+                  'Vue d\'ensemble cross-platform instantanée',
+                  'Identification rapide des campagnes à scaler/couper',
+                  'Données fiables pour convaincre la direction'
+                ]
+              },
+              {
+                title: 'Gains concrets',
+                items: [
+                  '2-4h/semaine économisées sur le reporting',
+                  'Réactivité accrue face aux anomalies',
+                  'Meilleure allocation budgétaire entre plateformes'
+                ]
+              }
+            ],
+            conclusion: '→ Un bon reporting transforme les données en décisions rentables.'
+          }
+        },
+        levels: [
+          { name: 'Essentiel', price: 150, features: ['Dashboard standard', 'KPIs principaux', '1 plateforme'], recommended: 'Suivi basique', color: 'blue' },
+          { name: 'Avancé', price: 300, features: ['Dashboard personnalisé', 'Multi-plateformes', 'Alertes automatiques', 'Attribution avancée'], recommended: 'Pilotage multi-canal', color: 'indigo', popular: true }
+        ]
+      }
+    ]);
+
+    // Map services by domain
+    const servicesByDomain = Object.freeze({
+      [DOMAINS.SEO]: seoServices,
+      [DOMAINS.GOOGLE_ADS]: googleAdsServices,
+      [DOMAINS.PAID_SOCIAL]: paidSocialServices
+    });
+
     const setupOptions = Object.freeze([
       { id: 'tracking', name: 'Tracking & Measurement Setup', description: 'GA4, GTM, conversions, Meta Pixel, Cookie Banner', price: 750 },
       { id: 'dashboard', name: 'Dashboard Looker Studio', description: 'Reporting visuel en temps réel', price: 500 }
@@ -568,8 +1224,17 @@
           </div>
 
           <div className="mb-4">
-            <span className="text-2xl font-bold text-gray-900">{level.priceNote || `${level.price}€`}</span>
-            <span className="text-gray-500 text-sm">{isOneOff ? ' (une fois)' : '/mois'}</span>
+            {level.budgetBased ? (
+              <>
+                <span className="text-2xl font-bold text-gray-900">{level.price > 0 ? `+${level.price}€` : 'Inclus'}</span>
+                <span className="text-gray-500 text-sm"> + frais de gestion</span>
+              </>
+            ) : (
+              <>
+                <span className="text-2xl font-bold text-gray-900">{level.priceNote || `${level.price}€`}</span>
+                <span className="text-gray-500 text-sm">{isOneOff ? ' (une fois)' : '/mois'}</span>
+              </>
+            )}
           </div>
 
           <ul className="space-y-2 mb-4">
@@ -593,8 +1258,153 @@
       );
     });
 
+    // Domain Selection Component
+    const DomainSelector = memo(function DomainSelector({ selectedDomains, onToggleDomain, onContinue }) {
+      const domains = [DOMAINS.SEO, DOMAINS.GOOGLE_ADS, DOMAINS.PAID_SOCIAL];
+
+      const domainColors = {
+        [DOMAINS.SEO]: { selected: 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-500', unselected: 'border-gray-200 hover:border-indigo-300', badge: 'bg-indigo-100 text-indigo-700' },
+        [DOMAINS.GOOGLE_ADS]: { selected: 'border-blue-500 bg-blue-50 ring-2 ring-blue-500', unselected: 'border-gray-200 hover:border-blue-300', badge: 'bg-blue-100 text-blue-700' },
+        [DOMAINS.PAID_SOCIAL]: { selected: 'border-purple-500 bg-purple-50 ring-2 ring-purple-500', unselected: 'border-gray-200 hover:border-purple-300', badge: 'bg-purple-100 text-purple-700' }
+      };
+
+      const hasSelection = selectedDomains.length > 0;
+
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+          <div className="max-w-4xl w-full">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <a href="https://www.mydigipal.com/fr" target="_blank" rel="noopener noreferrer" className="inline-block mb-6">
+                <img src="https://cdn.prod.website-files.com/64ec8901e801c89308b10a5b/65f06634783f8c20e2918f0d_01_Main%20.svg" alt="MyDigipal" className="h-12 w-auto" />
+              </a>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium mb-4">
+                <SparklesIcon /> Simulateur Marketing Digital
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Composez votre offre sur-mesure</h1>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Sélectionnez les domaines qui vous intéressent. Vous pouvez en choisir plusieurs pour une stratégie complète.
+              </p>
+            </div>
+
+            {/* Domain Cards */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {domains.map(domainId => {
+                const config = domainConfig[domainId];
+                const isSelected = selectedDomains.includes(domainId);
+                const colors = domainColors[domainId];
+
+                return (
+                  <div
+                    key={domainId}
+                    onClick={() => onToggleDomain(domainId)}
+                    className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-200 bg-white ${isSelected ? colors.selected : colors.unselected}`}
+                  >
+                    <div className="text-center">
+                      <span className="text-5xl mb-4 block">{config.icon}</span>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">{config.name}</h3>
+                      <p className="text-gray-600 text-sm">{config.description}</p>
+                    </div>
+
+                    {isSelected && (
+                      <div className={`absolute -top-3 -right-3 w-8 h-8 rounded-full flex items-center justify-center ${colors.badge}`}>
+                        <CheckIcon />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Info box for multi-selection */}
+            <div className="bg-white rounded-xl p-4 mb-8 border border-gray-200">
+              <div className="flex items-start gap-3">
+                <span className="text-blue-500 mt-0.5"><InfoIcon /></span>
+                <div>
+                  <p className="text-sm text-gray-700">
+                    <strong>Conseil :</strong> Une stratégie marketing efficace combine souvent plusieurs canaux.
+                    Le SEO construit votre visibilité long terme tandis que Google Ads et Social Ads génèrent des résultats immédiats.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Continue Button */}
+            <div className="text-center">
+              <button
+                onClick={onContinue}
+                disabled={!hasSelection}
+                className={`px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center gap-2 mx-auto ${
+                  hasSelection
+                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                Configurer mes services <ArrowRightIcon />
+              </button>
+              {!hasSelection && (
+                <p className="mt-3 text-sm text-gray-500">Sélectionnez au moins un domaine pour continuer</p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    });
+
+    // Budget Slider Component for Ads
+    const BudgetSlider = memo(function BudgetSlider({ domain, budget, onBudgetChange, managementFee }) {
+      const config = domainConfig[domain];
+      const feeConfig = MANAGEMENT_FEE_CONFIG[domain];
+
+      const handleChange = useCallback((e) => {
+        onBudgetChange(domain, parseInt(e.target.value));
+      }, [domain, onBudgetChange]);
+
+      return (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 fade-in">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-3xl">{config.icon}</span>
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">Budget publicitaire {config.name}</h3>
+              <p className="text-sm text-gray-600">Définissez votre budget mensuel de dépenses publicitaires</p>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-gray-600">Budget mensuel</span>
+              <span className="text-2xl font-bold text-gray-900">{budget.toLocaleString()}€/mois</span>
+            </div>
+            <input
+              type="range"
+              min={BUDGET_CONFIG.min}
+              max={BUDGET_CONFIG.max}
+              step={BUDGET_CONFIG.step}
+              value={budget}
+              onChange={handleChange}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+            />
+            <div className="flex justify-between text-xs text-gray-400 mt-1">
+              <span>{BUDGET_CONFIG.min.toLocaleString()}€</span>
+              <span>{BUDGET_CONFIG.max.toLocaleString()}€</span>
+            </div>
+          </div>
+
+          <div className="bg-indigo-50 rounded-xl p-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm text-indigo-700 font-medium">Frais de gestion calculés</p>
+                <p className="text-xs text-indigo-600">{feeConfig.percentage}% du budget (min. {feeConfig.minimum}€)</p>
+              </div>
+              <span className="text-xl font-bold text-indigo-700">{managementFee}€/mois</span>
+            </div>
+          </div>
+        </div>
+      );
+    });
+
     // Performance: Memoized component with useCallback for stable event handlers
-    const ServiceSection = memo(function ServiceSection({ service, selection, onSelect, onDisable, isDisabled, cmsAddon, onToggleCmsAddon }) {
+    const ServiceSection = memo(function ServiceSection({ service, selection, onSelect, onDisable, isDisabled, cmsAddon, onToggleCmsAddon, managementFee }) {
       const [showDetails, setShowDetails] = useState(false);
       const [showRoi, setShowRoi] = useState(false);
 
@@ -726,6 +1536,19 @@
                 ))}
               </div>
 
+              {/* Affichage des frais de gestion pour services basés sur budget */}
+              {service.hasBudgetFee && selection !== null && managementFee > 0 && (
+                <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-amber-900">Frais de gestion inclus</p>
+                      <p className="text-sm text-amber-700">Basés sur votre budget publicitaire</p>
+                    </div>
+                    <span className="text-lg font-bold text-amber-900">+{managementFee}€/mois</span>
+                  </div>
+                </div>
+              )}
+
               {/* Option CMS pour Contenu IA */}
               {service.hasAddon && selection !== null && (
                 <div
@@ -791,10 +1614,45 @@
       throw new Error('Max retries exceeded');
     };
 
-    // Composant principal
-    function SEOCalculator() {
-      const [selections, setSelections] = useState({ audit: null, corrections: null, strategie: null, contenu: null, suivi: null });
-      const [disabledServices, setDisabledServices] = useState({ audit: false, corrections: false, strategie: false, contenu: false, suivi: false });
+    // Helper: Calculate management fee based on budget
+    const calculateManagementFee = (domain, budget) => {
+      const config = MANAGEMENT_FEE_CONFIG[domain];
+      if (!config) return 0;
+      const percentageFee = Math.round(budget * (config.percentage / 100));
+      return Math.max(percentageFee, config.minimum);
+    };
+
+    // Helper: Generate initial state for domain services
+    const generateInitialSelections = (domains) => {
+      const selections = {};
+      const disabled = {};
+      domains.forEach(domain => {
+        const services = servicesByDomain[domain];
+        services.forEach(service => {
+          selections[service.id] = null;
+          disabled[service.id] = false;
+        });
+      });
+      return { selections, disabled };
+    };
+
+    // Composant principal - Calculateur Marketing Multi-Domaines
+    function MarketingCalculator() {
+      // Step management
+      const [currentStep, setCurrentStep] = useState('domains'); // 'domains' | 'services'
+      const [selectedDomains, setSelectedDomains] = useState([]);
+
+      // Service selections (dynamic based on selected domains)
+      const [selections, setSelections] = useState({});
+      const [disabledServices, setDisabledServices] = useState({});
+
+      // Ads budgets
+      const [adBudgets, setAdBudgets] = useState({
+        [DOMAINS.GOOGLE_ADS]: BUDGET_CONFIG.default,
+        [DOMAINS.PAID_SOCIAL]: BUDGET_CONFIG.default
+      });
+
+      // Common state
       const [cmsAddon, setCmsAddon] = useState(false);
       const [setupSelections, setSetupSelections] = useState({ tracking: false, dashboard: false });
       const [duration, setDuration] = useState(4);
@@ -802,6 +1660,44 @@
       const [contactInfo, setContactInfo] = useState({ name: '', email: '', company: '' });
       const [formSubmitted, setFormSubmitted] = useState(false);
       const [isSubmitting, setIsSubmitting] = useState(false);
+
+      // Domain selection handlers
+      const handleToggleDomain = useCallback((domainId) => {
+        setSelectedDomains(prev => {
+          if (prev.includes(domainId)) {
+            return prev.filter(d => d !== domainId);
+          }
+          return [...prev, domainId];
+        });
+      }, []);
+
+      const handleContinueFromDomains = useCallback(() => {
+        // Initialize selections for selected domains
+        const { selections: initSelections, disabled: initDisabled } = generateInitialSelections(selectedDomains);
+        setSelections(initSelections);
+        setDisabledServices(initDisabled);
+        setCurrentStep('services');
+      }, [selectedDomains]);
+
+      const handleBackToDomains = useCallback(() => {
+        setCurrentStep('domains');
+      }, []);
+
+      // Budget handler
+      const handleBudgetChange = useCallback((domain, budget) => {
+        setAdBudgets(prev => ({ ...prev, [domain]: budget }));
+      }, []);
+
+      // Calculate management fees for each domain
+      const managementFees = useMemo(() => {
+        const fees = {};
+        [DOMAINS.GOOGLE_ADS, DOMAINS.PAID_SOCIAL].forEach(domain => {
+          if (selectedDomains.includes(domain)) {
+            fees[domain] = calculateManagementFee(domain, adBudgets[domain]);
+          }
+        });
+        return fees;
+      }, [selectedDomains, adBudgets]);
 
       // Performance: useCallback to prevent function recreation on each render
       const handleSelect = useCallback((serviceId, levelIdx) => {
@@ -853,41 +1749,67 @@
       }, []);
 
       // Performance: Split useMemo into smaller focused memos for better granularity
-      // Memo 1: Calculate selected services (depends on selections, disabledServices, cmsAddon)
-      const selectedServices = useMemo(() => {
-        const selected = [];
-        services.forEach(service => {
-          const levelIdx = selections[service.id];
-          const isDisabled = disabledServices[service.id];
-          if (levelIdx !== null && !isDisabled) {
-            const level = service.levels[levelIdx];
+      // Memo 1: Calculate selected services by domain (depends on selections, disabledServices, cmsAddon, managementFees)
+      const selectedServicesByDomain = useMemo(() => {
+        const byDomain = {};
 
-            if (service.isOneOff) {
-              selected.push({
-                id: service.id,
-                service: service.title,
-                level: level.name,
-                price: level.price,
-                features: level.features,
-                isOneOff: true
-              });
-            } else {
-              selected.push({
-                id: service.id,
-                service: service.title,
-                level: level.name,
-                price: level.price,
-                cmsAddon: service.id === 'contenu' && cmsAddon ? 100 : 0,
-                features: service.id === 'contenu' && cmsAddon
-                  ? [...level.features, 'Publication directe CMS']
-                  : level.features,
-                isOneOff: false
-              });
+        selectedDomains.forEach(domain => {
+          const domainServices = servicesByDomain[domain] || [];
+          const selected = [];
+
+          domainServices.forEach(service => {
+            const levelIdx = selections[service.id];
+            const isDisabled = disabledServices[service.id];
+
+            if (levelIdx !== null && !isDisabled) {
+              const level = service.levels[levelIdx];
+
+              // Calculate management fee for budget-based services
+              let managementFee = 0;
+              if (service.hasBudgetFee && level.budgetBased) {
+                managementFee = managementFees[domain] || 0;
+              }
+
+              if (service.isOneOff) {
+                selected.push({
+                  id: service.id,
+                  domain: domain,
+                  service: service.title,
+                  level: level.name,
+                  price: level.price,
+                  features: level.features,
+                  isOneOff: true
+                });
+              } else {
+                selected.push({
+                  id: service.id,
+                  domain: domain,
+                  service: service.title,
+                  level: level.name,
+                  price: level.price,
+                  managementFee: managementFee,
+                  levelExtra: level.price, // Extra price on top of management fee
+                  cmsAddon: service.id === 'contenu' && cmsAddon ? 100 : 0,
+                  features: service.id === 'contenu' && cmsAddon
+                    ? [...level.features, 'Publication directe CMS']
+                    : level.features,
+                  isOneOff: false,
+                  hasBudgetFee: service.hasBudgetFee && level.budgetBased
+                });
+              }
             }
-          }
+          });
+
+          byDomain[domain] = selected;
         });
-        return selected;
-      }, [selections, disabledServices, cmsAddon]);
+
+        return byDomain;
+      }, [selectedDomains, selections, disabledServices, cmsAddon, managementFees]);
+
+      // Flatten all selected services
+      const selectedServices = useMemo(() => {
+        return Object.values(selectedServicesByDomain).flat();
+      }, [selectedServicesByDomain]);
 
       // Memo 2: Calculate setup services (depends only on setupSelections)
       const selectedSetupServices = useMemo(() => {
@@ -907,16 +1829,23 @@
       }, [setupSelections]);
 
       // Memo 3: Calculate totals (depends on selectedServices, selectedSetupServices)
-      const { monthlyTotal, oneOffTotal, setupTotal } = useMemo(() => {
+      const { monthlyTotal, oneOffTotal, setupTotal, totalManagementFees } = useMemo(() => {
         let monthly = 0;
         let oneOff = 0;
         let setup = 0;
+        let managementFeesTotal = 0;
 
         selectedServices.forEach(item => {
           if (item.isOneOff) {
             oneOff += item.price;
           } else {
-            monthly += item.price + (item.cmsAddon || 0);
+            // For budget-based services, add management fee + level extra price
+            if (item.hasBudgetFee) {
+              managementFeesTotal += item.managementFee || 0;
+              monthly += (item.managementFee || 0) + (item.levelExtra || 0);
+            } else {
+              monthly += item.price + (item.cmsAddon || 0);
+            }
           }
         });
 
@@ -924,7 +1853,7 @@
           setup += item.price;
         });
 
-        return { monthlyTotal: monthly, oneOffTotal: oneOff, setupTotal: setup };
+        return { monthlyTotal: monthly, oneOffTotal: oneOff, setupTotal: setup, totalManagementFees: managementFeesTotal };
       }, [selectedServices, selectedSetupServices]);
 
       // Memo 4: Calculate discount (depends on monthlyTotal, duration)
@@ -940,42 +1869,103 @@
       const effectiveMonthlyPrice = Math.round(grandTotal / duration);
       const hasSelections = totalServicesCount > 0;
 
+      // Calculate total ad budget
+      const totalAdBudget = useMemo(() => {
+        let total = 0;
+        if (selectedDomains.includes(DOMAINS.GOOGLE_ADS)) {
+          total += adBudgets[DOMAINS.GOOGLE_ADS];
+        }
+        if (selectedDomains.includes(DOMAINS.PAID_SOCIAL)) {
+          total += adBudgets[DOMAINS.PAID_SOCIAL];
+        }
+        return total;
+      }, [selectedDomains, adBudgets]);
+
       // Performance: useCallback for form submission with retry logic
       const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
         setIsSubmitting(true);
 
+        // Build detailed payload with all domain information
         const payload = {
-          name: contactInfo.name,
-          email: contactInfo.email,
-          company: contactInfo.company || '',
-          servicesDetails: selectedServices.map(s => ({
-            name: s.service,
-            level: s.level,
-            price: s.price,
-            cmsAddon: s.cmsAddon || 0,
-            totalPrice: s.price + (s.cmsAddon || 0),
-            features: s.features,
-            isOneOff: s.isOneOff
+          // Contact info
+          contact: {
+            name: contactInfo.name,
+            email: contactInfo.email,
+            company: contactInfo.company || ''
+          },
+
+          // Selected domains
+          selectedDomains: selectedDomains.map(d => ({
+            id: d,
+            name: domainConfig[d].name
           })),
+
+          // Services by domain
+          servicesByDomain: Object.fromEntries(
+            selectedDomains.map(domain => [
+              domainConfig[domain].name,
+              (selectedServicesByDomain[domain] || []).map(s => ({
+                name: s.service,
+                level: s.level,
+                basePrice: s.price,
+                managementFee: s.managementFee || 0,
+                cmsAddon: s.cmsAddon || 0,
+                totalPrice: s.isOneOff ? s.price : (s.hasBudgetFee ? (s.managementFee + s.levelExtra) : (s.price + (s.cmsAddon || 0))),
+                features: s.features,
+                isOneOff: s.isOneOff,
+                hasBudgetFee: s.hasBudgetFee || false
+              }))
+            ])
+          ),
+
+          // Ad budgets (for Google Ads and Paid Social)
+          adBudgets: {
+            googleAds: selectedDomains.includes(DOMAINS.GOOGLE_ADS) ? {
+              monthlyBudget: adBudgets[DOMAINS.GOOGLE_ADS],
+              managementFee: managementFees[DOMAINS.GOOGLE_ADS] || 0,
+              feePercentage: MANAGEMENT_FEE_CONFIG[DOMAINS.GOOGLE_ADS].percentage
+            } : null,
+            paidSocial: selectedDomains.includes(DOMAINS.PAID_SOCIAL) ? {
+              monthlyBudget: adBudgets[DOMAINS.PAID_SOCIAL],
+              managementFee: managementFees[DOMAINS.PAID_SOCIAL] || 0,
+              feePercentage: MANAGEMENT_FEE_CONFIG[DOMAINS.PAID_SOCIAL].percentage
+            } : null,
+            totalMonthlyAdBudget: totalAdBudget
+          },
+
+          // Setup options
           setupDetails: {
             tracking: setupSelections.tracking ? { name: 'Tracking & Measurement Setup', price: 750 } : null,
             dashboard: setupSelections.dashboard ? { name: 'Dashboard Looker Studio', price: 500 } : null,
             total: setupTotal
           },
-          duration: duration,
-          monthlyServicesTotal: monthlyTotal,
-          oneOffServicesTotal: oneOffTotal,
-          setupTotal: setupTotal,
-          discount: discount,
-          grandTotal: grandTotal,
-          monthlyPrice: effectiveMonthlyPrice
+
+          // Financial summary
+          financialSummary: {
+            duration: duration,
+            monthlyServicesTotal: monthlyTotal,
+            totalManagementFees: totalManagementFees,
+            oneOffServicesTotal: oneOffTotal,
+            setupTotal: setupTotal,
+            discount: discount,
+            grandTotal: grandTotal,
+            effectiveMonthlyPrice: effectiveMonthlyPrice
+          },
+
+          // Metadata
+          metadata: {
+            timestamp: new Date().toISOString(),
+            source: 'marketing-calculator-v2',
+            domainsCount: selectedDomains.length,
+            servicesCount: totalServicesCount
+          }
         };
 
         try {
           // Performance: Use retry logic with exponential backoff
-          await fetchWithRetry('https://n8n.mydigipal.com/webhook/calculateur-seo', {
+          await fetchWithRetry('https://n8n.mydigipal.com/webhook/calculateur-marketing', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -986,8 +1976,20 @@
           alert('Erreur de connexion. Veuillez réessayer.');
           setIsSubmitting(false);
         }
-      }, [isSubmitting, contactInfo, selectedServices, setupSelections, setupTotal, duration, monthlyTotal, oneOffTotal, discount, grandTotal, effectiveMonthlyPrice]);
+      }, [isSubmitting, contactInfo, selectedDomains, selectedServicesByDomain, adBudgets, managementFees, totalAdBudget, setupSelections, setupTotal, duration, monthlyTotal, totalManagementFees, oneOffTotal, discount, grandTotal, effectiveMonthlyPrice, totalServicesCount]);
 
+      // Domain selection screen
+      if (currentStep === 'domains') {
+        return (
+          <DomainSelector
+            selectedDomains={selectedDomains}
+            onToggleDomain={handleToggleDomain}
+            onContinue={handleContinueFromDomains}
+          />
+        );
+      }
+
+      // Services configuration screen
       return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
           {/* Header */}
@@ -998,21 +2000,33 @@
                   <img src="https://cdn.prod.website-files.com/64ec8901e801c89308b10a5b/65f06634783f8c20e2918f0d_01_Main%20.svg" alt="MyDigipal" className="h-10 w-auto" />
                 </a>
                 <div className="border-l border-gray-200 pl-3">
-                  <p className="text-sm font-medium text-gray-700">Simulateur de Management SEO</p>
+                  <p className="text-sm font-medium text-gray-700">Simulateur Marketing Digital</p>
+                  <div className="flex gap-1 mt-1">
+                    {selectedDomains.map(d => (
+                      <span key={d} className="text-xs px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">
+                        {domainConfig[d].icon} {domainConfig[d].name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-              
-              {hasSelections && (
-                <div className="hidden md:flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">Estimation</p>
-                    <p className="text-xl font-bold text-indigo-600">{effectiveMonthlyPrice}€/mois</p>
+
+              <div className="flex items-center gap-3">
+                <button onClick={handleBackToDomains} className="text-sm text-gray-500 hover:text-gray-700">
+                  ← Modifier les domaines
+                </button>
+                {hasSelections && (
+                  <div className="hidden md:flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-sm text-gray-500">Estimation</p>
+                      <p className="text-xl font-bold text-indigo-600">{effectiveMonthlyPrice}€/mois</p>
+                    </div>
+                    <button onClick={handleShowResult} className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-2">
+                      Voir le récapitulatif <ArrowRightIcon />
+                    </button>
                   </div>
-                  <button onClick={handleShowResult} className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-2">
-                    Voir le récapitulatif <ArrowRightIcon />
-                  </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </header>
 
@@ -1022,25 +2036,56 @@
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium mb-4">
                 <SparklesIcon /> Offre modulaire sur-mesure
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Composez votre offre SEO</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Composez votre offre marketing</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Sélectionnez le niveau adapté pour chaque service ou cliquez sur "Non merci" pour les modules qui ne vous intéressent pas.
               </p>
             </section>
 
-            {/* Services */}
-            {services.map(service => (
-              <ServiceSection
-                key={service.id}
-                service={service}
-                selection={selections[service.id]}
-                onSelect={handleSelect}
-                onDisable={handleDisable}
-                isDisabled={disabledServices[service.id]}
-                cmsAddon={service.id === 'contenu' ? cmsAddon : false}
-                onToggleCmsAddon={handleToggleCmsAddon}
-              />
-            ))}
+            {/* Services by Domain */}
+            {selectedDomains.map(domain => {
+              const config = domainConfig[domain];
+              const domainServices = servicesByDomain[domain] || [];
+              const needsBudgetSlider = domain === DOMAINS.GOOGLE_ADS || domain === DOMAINS.PAID_SOCIAL;
+
+              return (
+                <div key={domain} className="mb-12">
+                  {/* Domain Header */}
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-200">
+                    <span className="text-4xl">{config.icon}</span>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">{config.name}</h2>
+                      <p className="text-gray-600">{config.description}</p>
+                    </div>
+                  </div>
+
+                  {/* Budget Slider for Ads Domains */}
+                  {needsBudgetSlider && (
+                    <BudgetSlider
+                      domain={domain}
+                      budget={adBudgets[domain]}
+                      onBudgetChange={handleBudgetChange}
+                      managementFee={managementFees[domain] || 0}
+                    />
+                  )}
+
+                  {/* Domain Services */}
+                  {domainServices.map(service => (
+                    <ServiceSection
+                      key={service.id}
+                      service={service}
+                      selection={selections[service.id]}
+                      onSelect={handleSelect}
+                      onDisable={handleDisable}
+                      isDisabled={disabledServices[service.id]}
+                      cmsAddon={service.id === 'contenu' ? cmsAddon : false}
+                      onToggleCmsAddon={handleToggleCmsAddon}
+                      managementFee={managementFees[domain] || 0}
+                    />
+                  ))}
+                </div>
+              );
+            })}
 
             {/* F. Tracking et Reporting */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 fade-in">
@@ -1148,42 +2193,90 @@
                     <p className="text-gray-500 text-center py-8">Aucun service sélectionné.</p>
                   ) : (
                     <>
-                      {/* Services sélectionnés */}
-                      <div className="space-y-4 mb-6">
-                        {selectedServices.map((item) => (
-                          <div key={`selected-${item.id}-${item.level}`} className={`p-4 rounded-xl ${item.isOneOff ? 'bg-amber-50' : 'bg-gray-50'}`}>
-                            <div className="flex items-center justify-between mb-2">
-                              <div>
-                                <h4 className="font-semibold text-gray-900">{item.service}</h4>
-                                <span className="text-sm text-indigo-600 font-medium">
-                                  {item.level}
-                                  {item.isOneOff && <span className="ml-2 text-amber-600">(ponctuel)</span>}
-                                </span>
+                      {/* Services sélectionnés par domaine */}
+                      <div className="space-y-6 mb-6">
+                        {selectedDomains.map(domain => {
+                          const domainServices = selectedServicesByDomain[domain] || [];
+                          if (domainServices.length === 0) return null;
+                          const config = domainConfig[domain];
+                          const hasBudget = domain === DOMAINS.GOOGLE_ADS || domain === DOMAINS.PAID_SOCIAL;
+
+                          return (
+                            <div key={domain}>
+                              {/* Domain Header */}
+                              <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
+                                <span className="text-xl">{config.icon}</span>
+                                <h4 className="font-bold text-gray-900">{config.name}</h4>
                               </div>
-                              <div className="text-right">
-                                <span className="text-lg font-bold text-gray-900">
-                                  {item.price + (item.cmsAddon || 0)}€
-                                  {!item.isOneOff && <span className="text-sm font-normal text-gray-500">/mois</span>}
-                                </span>
-                                {item.cmsAddon > 0 && (
-                                  <p className="text-xs text-green-600">dont +100€ CMS</p>
-                                )}
+
+                              {/* Budget info for ads domains */}
+                              {hasBudget && (
+                                <div className="mb-3 p-3 bg-blue-50 rounded-lg">
+                                  <div className="flex justify-between items-center text-sm">
+                                    <span className="text-blue-700">Budget publicitaire mensuel</span>
+                                    <span className="font-bold text-blue-900">{adBudgets[domain].toLocaleString()}€/mois</span>
+                                  </div>
+                                  <div className="flex justify-between items-center text-sm mt-1">
+                                    <span className="text-blue-700">Frais de gestion ({MANAGEMENT_FEE_CONFIG[domain].percentage}%)</span>
+                                    <span className="font-bold text-blue-900">{managementFees[domain]}€/mois</span>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Domain services */}
+                              <div className="space-y-3">
+                                {domainServices.map((item) => (
+                                  <div key={`selected-${item.id}-${item.level}`} className={`p-4 rounded-xl ${item.isOneOff ? 'bg-amber-50' : 'bg-gray-50'}`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div>
+                                        <h4 className="font-semibold text-gray-900">{item.service}</h4>
+                                        <span className="text-sm text-indigo-600 font-medium">
+                                          {item.level}
+                                          {item.isOneOff && <span className="ml-2 text-amber-600">(ponctuel)</span>}
+                                        </span>
+                                      </div>
+                                      <div className="text-right">
+                                        {item.hasBudgetFee ? (
+                                          <>
+                                            <span className="text-lg font-bold text-gray-900">
+                                              {(item.managementFee + item.levelExtra)}€
+                                              <span className="text-sm font-normal text-gray-500">/mois</span>
+                                            </span>
+                                            {item.levelExtra > 0 && (
+                                              <p className="text-xs text-blue-600">dont +{item.levelExtra}€ niveau {item.level}</p>
+                                            )}
+                                          </>
+                                        ) : (
+                                          <>
+                                            <span className="text-lg font-bold text-gray-900">
+                                              {item.price + (item.cmsAddon || 0)}€
+                                              {!item.isOneOff && <span className="text-sm font-normal text-gray-500">/mois</span>}
+                                            </span>
+                                            {item.cmsAddon > 0 && (
+                                              <p className="text-xs text-green-600">dont +100€ CMS</p>
+                                            )}
+                                          </>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <ul className="text-sm text-gray-600">
+                                      {item.features.map((f, featureIdx) => (
+                                        <li key={`${item.id}-feature-${featureIdx}-${f.slice(0, 10)}`} className="flex items-center gap-2">
+                                          <span className="text-green-500"><CheckIcon /></span> {f}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                ))}
                               </div>
                             </div>
-                            <ul className="text-sm text-gray-600">
-                              {item.features.map((f, featureIdx) => (
-                                <li key={`${item.id}-feature-${featureIdx}-${f.slice(0, 10)}`} className="flex items-center gap-2">
-                                  <span className="text-green-500"><CheckIcon /></span> {f}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                        
+                          );
+                        })}
+
                         {/* F. Tracking et Reporting */}
                         {(setupSelections.tracking || setupSelections.dashboard) && (
                           <div className="p-4 bg-amber-50 rounded-xl">
-                            <h4 className="font-semibold text-gray-900 mb-2">F. Tracking et Reporting <span className="text-amber-600 text-sm font-normal">(ponctuel)</span></h4>
+                            <h4 className="font-semibold text-gray-900 mb-2">Tracking et Reporting <span className="text-amber-600 text-sm font-normal">(ponctuel)</span></h4>
                             {setupSelections.tracking && <div className="flex justify-between text-sm"><span>Tracking & Measurement Setup</span><span className="font-medium">750€</span></div>}
                             {setupSelections.dashboard && <div className="flex justify-between text-sm"><span>Dashboard Looker Studio</span><span className="font-medium">500€</span></div>}
                           </div>
@@ -1291,7 +2384,7 @@
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<SEOCalculator />);
+    root.render(<MarketingCalculator />);
   </script>
 </body>
 </html>
